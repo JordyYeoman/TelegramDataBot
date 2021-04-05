@@ -23,7 +23,7 @@ setInterval(()=> {
     // fetchData
     dataCollectorOne();
     bot.sendMessage(chatId, jarvisQuote);
-}, 1800000);
+}, 1800001);
 // Run above every 30 minutes ^ 
 
 // Fetch Data from Ethermine
