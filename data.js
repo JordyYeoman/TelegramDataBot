@@ -21,8 +21,8 @@ bot.sendMessage(chatId, jarvisQuote);
 // 60000 * 30 = 1800000
 setInterval(()=> {
     // fetchData
-    dataCollectorOne();
-    bot.sendMessage(chatId, jarvisQuote);
+    let x = dataCollectorOne();
+    bot.sendMessage(chatId, x);
 }, 1800001);
 // Run above every 30 minutes ^ 
 
