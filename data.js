@@ -12,30 +12,34 @@ const chatId = process.env.TELEGRAM_CHAT_ID;
 // Precheck for Bot activity:
 // Send random message on startup:
 const jarvisQuote = "Good Morning Sir, the weather is a sunny warm day."
-bot.sendMessage(chatId, jarvisQuote);
+//bot.sendMessage(chatId, jarvisQuote);
 
 // Call this function at allotted time every 15 mins
 // 1000 = 1s, so 1 min = 60 which is 60000ms 
 // 60000 * minutes 
 // 60000 * 15  = 900000
 // 60000 * 30 = 1800000
-setInterval(()=> {
+setInterval(async()=> {
     // fetchData
-    let x = dataCollectorOne();
-    bot.sendMessage(chatId, x);
-}, 1800001);
+    let x = await dataCollectorOne();
+    console.log(x);
+    let y = JSON.stringify(x);
+    //console.log(y);
+    bot.sendMessage(chatId, y);
+}, 1800000);
 // Run above every 30 minutes ^ 
 
 // Fetch Data from Ethermine
-let miningDashboardUrl = process.env.MINING_DASHBOARD_URL;
+const miningDashboardUrl = process.env.MINING_DASHBOARD_URL;
 
-function dataCollectorOne(){
-    fetch(miningDashboardUrl)
+async function dataCollectorOne(){
+    let data = {};
+    await fetch(miningDashboardUrl)
     .then(res => res.json())
     .then(json => {
         let currentData = json.data.currentStatistics;
+        
         let activeWorkers = currentData.activeWorkers;
-
         let unpaid = currentData.unpaid.toString();
         let unpaidConverted = '0.00' + unpaid;
         let unpaidFinal = parseFloat(unpaidConverted).toFixed(4);
@@ -44,15 +48,13 @@ function dataCollectorOne(){
         // Calc Percentage until payout
         let percentageUntilPayout = (unpaidFinal/requiredForPayout) * 100;
         
-        let data = {
+        return data = {
             UnpaidAmount: unpaidFinal,
             PercentageUntilPayout: percentageUntilPayout + '%',
             ActiveDwarves: activeWorkers,
         };
-
-        console.log(data);
-        return data;
     });
+    return data;
 }
 
 
